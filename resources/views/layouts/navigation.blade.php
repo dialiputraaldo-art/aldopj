@@ -15,6 +15,15 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('kategori.index')" :active="request()->routeIs('kategori.*')">
+                        {{ __('Kategori Buku') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('buku.index')" :active="request()->routeIs('buku.*')">
+                        {{ __('Buku') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('peminjaman.index')" :active="request()->routeIs('peminjaman.*')">
+                        {{ __('Peminjaman') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -41,7 +50,6 @@
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-
                             <x-dropdown-link :href="route('logout')"
                                     onclick="event.preventDefault();
                                                 this.closest('form').submit();">
@@ -70,6 +78,15 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('kategori.index')" :active="request()->routeIs('kategori.*')">
+                {{ __('Kategori Buku') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('buku.index')" :active="request()->routeIs('buku.*')">
+                {{ __('Buku') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('peminjaman.index')" :active="request()->routeIs('peminjaman.*')">
+                {{ __('Peminjaman') }}
+            </x-responsive-nav-link>
         </div>
 
         <!-- Responsive Settings Options -->
@@ -87,7 +104,6 @@
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-
                     <x-responsive-nav-link :href="route('logout')"
                             onclick="event.preventDefault();
                                         this.closest('form').submit();">
