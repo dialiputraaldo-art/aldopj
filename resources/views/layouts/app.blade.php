@@ -11,6 +11,62 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+        <style>
+            /* ===== HOVER POPUP MENU SIDEBAR ===== */
+            .sidebar-item {
+                position: relative;
+                transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+            }
+            .sidebar-item:hover {
+                transform: translateX(4px) scale(1.03);
+                background: rgba(99, 102, 241, 0.35);
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+            }
+            .sidebar-item .tooltip {
+                position: absolute;
+                left: calc(100% + 12px);
+                top: 50%;
+                transform: translateY(-50%) scale(0.9);
+                opacity: 0;
+                pointer-events: none;
+                white-space: nowrap;
+                background: rgba(255, 255, 255, 0.85);
+                backdrop-filter: blur(12px) saturate(180%);
+                -webkit-backdrop-filter: blur(12px) saturate(180%);
+                color: #1e1b4b;
+                font-size: 12px;
+                font-weight: 600;
+                padding: 6px 12px;
+                border-radius: 10px;
+                border: 1px solid rgba(255, 255, 255, 0.6);
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+                transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+                z-index: 60;
+            }
+            .sidebar-item .tooltip::before {
+                content: '';
+                position: absolute;
+                left: -5px;
+                top: 50%;
+                transform: translateY(-50%) rotate(45deg);
+                width: 10px;
+                height: 10px;
+                background: rgba(255, 255, 255, 0.85);
+                border-left: 1px solid rgba(255, 255, 255, 0.6);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+            }
+            .sidebar-item:hover .tooltip {
+                opacity: 1;
+                transform: translateY(-50%) scale(1);
+            }
+            .sidebar-item .icon-wrap {
+                transition: transform 0.25s ease;
+            }
+            .sidebar-item:hover .icon-wrap {
+                transform: scale(1.2) rotate(-6deg);
+            }
+        </style>
     </head>
     <body class="font-sans antialiased bg-gray-100">
         <div class="min-h-screen flex" x-data="{ sidebarOpen: false }">
@@ -20,36 +76,38 @@
                           lg:translate-x-0 lg:static lg:inset-0 flex flex-col"
                    :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
 
-                {{-- Logo --}}
                 <div class="h-16 flex items-center px-6 border-b border-indigo-800 shrink-0">
                     <a href="{{ route('dashboard') }}" class="text-xl font-bold tracking-wide flex items-center gap-2">
                         📚 <span>Perpustakaan</span>
                     </a>
                 </div>
 
-                {{-- Menu --}}
-                <nav class="flex-1 overflow-y-auto mt-4 px-3 space-y-1">
+                <nav class="flex-1 overflow-visible mt-4 px-3 space-y-1">
                     @php
                         $menus = [
-                            ['route' => 'dashboard',        'pattern' => 'dashboard',     'label' => 'Dashboard',     'icon' => '🏠'],
-                            ['route' => 'kategori.index',   'pattern' => 'kategori.*',    'label' => 'Kategori Buku', 'icon' => '🏷️'],
-                            ['route' => 'buku.index',       'pattern' => 'buku.*',        'label' => 'Buku',          'icon' => '📖'],
-                            ['route' => 'peminjaman.index', 'pattern' => 'peminjaman.*',  'label' => 'Peminjaman',    'icon' => '📝'],
+                            ['route' => 'dashboard',        'pattern' => 'dashboard',     'label' => 'Dashboard',     'icon' => '🏠', 'desc' => 'Ringkasan statistik'],
+                            ['route' => 'kategori.index',   'pattern' => 'kategori.*',    'label' => 'Kategori Buku', 'icon' => '🏷️', 'desc' => 'Kelola kategori'],
+                            ['route' => 'buku.index',       'pattern' => 'buku.*',        'label' => 'Buku',          'icon' => '📖', 'desc' => 'Kelola koleksi buku'],
+                            ['route' => 'peminjaman.index', 'pattern' => 'peminjaman.*',  'label' => 'Peminjaman',    'icon' => '📝', 'desc' => 'Catat & lihat peminjaman'],
                         ];
                     @endphp
                     @foreach ($menus as $m)
                         <a href="{{ route($m['route']) }}"
-                           class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition
+                           class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium
                                   {{ request()->routeIs($m['pattern'])
                                         ? 'bg-indigo-700 text-white shadow'
-                                        : 'text-indigo-100 hover:bg-indigo-800' }}">
-                            <span>{{ $m['icon'] }}</span>
+                                        : 'text-indigo-100' }}">
+                            <span class="icon-wrap text-lg">{{ $m['icon'] }}</span>
                             <span>{{ $m['label'] }}</span>
+
+                            {{-- Tooltip popup saat hover --}}
+                            <span class="tooltip">
+                                {{ $m['label'] }} — {{ $m['desc'] }}
+                            </span>
                         </a>
                     @endforeach
                 </nav>
 
-                {{-- User info di bawah --}}
                 <div class="shrink-0 p-4 border-t border-indigo-800">
                     <div class="flex items-center gap-3">
                         <div class="w-9 h-9 rounded-full bg-indigo-600 flex items-center justify-center font-bold">
@@ -70,7 +128,6 @@
             {{-- ===== KONTEN UTAMA ===== --}}
             <div class="flex-1 flex flex-col min-w-0">
 
-                {{-- Topbar --}}
                 <header class="h-16 bg-white shadow-sm flex items-center justify-between px-4 lg:px-8 sticky top-0 z-20">
                     <div class="flex items-center gap-3">
                         <button @click="sidebarOpen = !sidebarOpen"
@@ -111,7 +168,6 @@
                     @endif
                 </div>
 
-                {{-- Konten halaman --}}
                 <main class="p-4 lg:p-8 flex-1">
                     {{ $slot }}
                 </main>

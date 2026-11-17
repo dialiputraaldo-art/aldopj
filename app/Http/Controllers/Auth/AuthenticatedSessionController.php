@@ -28,7 +28,9 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        // Flash message login berhasil
+        return redirect()->intended(route('dashboard', absolute: false))
+                         ->with('success', 'Login berhasil! Selamat datang, ' . Auth::user()->name . '.');
     }
 
     /**
@@ -39,9 +41,8 @@ class AuthenticatedSessionController extends Controller
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect('/')->with('success', 'Anda telah logout.');
     }
 }

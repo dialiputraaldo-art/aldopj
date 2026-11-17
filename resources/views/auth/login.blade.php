@@ -1,9 +1,30 @@
 <x-guest-layout>
 
-    {{-- Session status (mis. setelah reset password) --}}
-    @if (session('status'))
-        <div class="mb-4 text-sm text-green-600 bg-green-50 border-l-4 border-green-500 px-4 py-3 rounded">
-            {{ session('status') }}
+    {{-- Notifikasi sukses (mis. setelah logout) --}}
+    @if (session('success'))
+        <div class="mb-4 flex items-start gap-2 bg-green-50 border-l-4 border-green-500 text-green-700 px-4 py-3 rounded shadow-sm">
+            <span class="text-lg">✅</span>
+            <span class="text-sm">{{ session('success') }}</span>
+        </div>
+    @endif
+
+    {{-- Notifikasi error umum (mis. session expired) --}}
+    @if (session('error'))
+        <div class="mb-4 flex items-start gap-2 bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded shadow-sm">
+            <span class="text-lg">❌</span>
+            <span class="text-sm">{{ session('error') }}</span>
+        </div>
+    @endif
+
+    {{-- Notifikasi login gagal (email/password salah) --}}
+    @if ($errors->any())
+        <div class="mb-4 flex items-start gap-2 bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded shadow-sm">
+            <span class="text-lg">⚠️</span>
+            <div class="text-sm">
+                @foreach ($errors->all() as $error)
+                    <p>{{ $error }}</p>
+                @endforeach
+            </div>
         </div>
     @endif
 
@@ -19,9 +40,9 @@
                    required autofocus autocomplete="username"
                    placeholder="admin@perpus.test"
                    class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm
-                          focus:border-indigo-500 focus:ring-indigo-500">
+                          focus:border-indigo-500 focus:ring-indigo-500 @error('email') border-red-500 @enderror">
             @error('email')
-                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                <p class="text-sm text-red-600 mt-1">📧 {{ $message }}</p>
             @enderror
         </div>
 
@@ -34,9 +55,9 @@
                    required autocomplete="current-password"
                    placeholder="••••••••"
                    class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm
-                          focus:border-indigo-500 focus:ring-indigo-500">
+                          focus:border-indigo-500 focus:ring-indigo-500 @error('password') border-red-500 @enderror">
             @error('password')
-                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                <p class="text-sm text-red-600 mt-1">🔒 {{ $message }}</p>
             @enderror
         </div>
 
