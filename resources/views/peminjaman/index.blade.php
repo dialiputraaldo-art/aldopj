@@ -2,31 +2,39 @@
     <x-slot name="title">Daftar Peminjaman</x-slot>
 
     <div class="space-y-4">
-        <div class="flex justify-between items-center">
-            <p class="text-gray-600">Riwayat peminjaman buku oleh warga sekolah.</p>
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+            <div>
+                <p class="text-gray-600 text-sm">Riwayat peminjaman buku oleh warga sekolah.</p>
+                <p class="text-xs text-gray-400 mt-1">Total: {{ $peminjaman->count() }} peminjaman</p>
+            </div>
             <a href="{{ route('peminjaman.create') }}"
-               class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg shadow transition">
-                + Catat Peminjaman
+               class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg shadow transition">
+                <span class="text-lg leading-none">＋</span> Catat Peminjaman
             </a>
         </div>
 
         <div class="bg-white rounded-2xl shadow overflow-hidden">
             @if ($peminjaman->isEmpty())
-                <p class="p-6 text-gray-500">Belum ada data peminjaman.</p>
+                <div class="p-10 text-center">
+                    <div class="text-5xl mb-3">📝</div>
+                    <p class="text-gray-500">Belum ada data peminjaman.</p>
+                    <a href="{{ route('peminjaman.create') }}"
+                       class="inline-block mt-4 text-indigo-600 hover:underline text-sm">+ Catat peminjaman pertama</a>
+                </div>
             @else
                 <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
+                    <thead class="bg-gradient-to-r from-indigo-50 to-indigo-100">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">No</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Judul Buku</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Peminjam</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tanggal</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Dicatat oleh</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-indigo-700 uppercase">No</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-indigo-700 uppercase">Judul Buku</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-indigo-700 uppercase">Peminjam</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-indigo-700 uppercase">Tanggal</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-indigo-700 uppercase">Dicatat oleh</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
                         @foreach ($peminjaman as $i => $item)
-                            <tr class="hover:bg-gray-50">
+                            <tr class="hover:bg-indigo-50/40 transition">
                                 <td class="px-6 py-3 text-sm text-gray-600">{{ $i + 1 }}</td>
                                 <td class="px-6 py-3 text-sm font-medium text-gray-800">{{ $item->buku->judul ?? '-' }}</td>
                                 <td class="px-6 py-3 text-sm text-gray-600">{{ $item->nama_peminjam }}</td>
