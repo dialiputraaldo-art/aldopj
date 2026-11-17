@@ -11,38 +11,28 @@ use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
 {
-    /**
-     * Display the login view.
-     */
     public function create(): View
     {
         return view('auth.login');
     }
 
-    /**
-     * Handle an incoming authentication request.
-     */
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
-
         $request->session()->regenerate();
 
-        // Flash message login berhasil
         return redirect()->intended(route('dashboard', absolute: false))
                          ->with('success', 'Login berhasil! Selamat datang, ' . Auth::user()->name . '.');
     }
 
-    /**
-     * Destroy an authenticated session.
-     */
     public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/')->with('success', 'Anda telah logout.');
+        // Flash message "Anda berhasil logout" akan tampil di halaman login
+        return redirect()->route('login')
+                         ->with('success', 'Anda berhasil logout.');
     }
 }
